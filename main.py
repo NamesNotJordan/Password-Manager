@@ -7,7 +7,7 @@ from tkinter import *
 
 app = Tk()
 app.title("Password Manager")
-app.config(padx=20, pady=20)
+app.config(padx=50, pady=50)
 
 # Logo
 canvas = Canvas(height=200, width=200)
@@ -20,20 +20,29 @@ canvas.grid(column=0, row=0, columnspan=3)
 website_label = Label(text="Website")
 website_label.grid(column=0, row=1)
 
+website_entry = Entry(width=35)
+website_entry.grid(column=1, row=1, columnspan=2, sticky="ew")
+
 # Username or email
-user_label = Label(text="Username or Email")
+user_label = Label(text="Username/Email")
 user_label.grid(column=0, row=2)
+
+user_entry = Entry(width=35)
+user_entry.grid(column=1, row=2, columnspan=2, sticky="ew")
 
 # Password
 password_label = Label(text="Password")
 password_label.grid(column=0, row=3)
 
+password_entry = Entry(width=21)
+password_entry.grid(column=1, row=3)
+
 # Buttons
 generate_password_button = Button(text="Generate Password")
 generate_password_button.grid(column=2, row=3)
 
-add_password_button = Button(text="Add")
-add_password_button.grid(column=1, row=4)
+add_password_button = Button(text="Add", width=36)
+add_password_button.grid(column=1, row=4, columnspan=2)
 
 # Mainloop
 app.mainloop()
