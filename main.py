@@ -36,11 +36,19 @@ def save_password_to_file():
     if not website or not email or not password:
         messagebox.showerror("Invalid Input(s)", "Please fill in all fields before trying to save")
     else:
-        with open("passwords.json", "a") as file:
-            json.dump(new_data, file)
+        with open("passwords.json", "r") as file:
+            data = json.load(file)
+            data.update(new_data)
+
+        with open("passwords.json", "w") as file:
+            json.dump(data, file, indent=4)
+
         website_entry.delete(0, END)
         password_entry.delete(0, END)
 
+
+def search_password():
+    pass
 # ---------------------------- UI SETUP ------------------------------- #
 
 
