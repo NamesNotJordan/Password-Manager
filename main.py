@@ -36,19 +36,35 @@ def save_password_to_file():
     if not website or not email or not password:
         messagebox.showerror("Invalid Input(s)", "Please fill in all fields before trying to save")
     else:
-        with open("passwords.json", "r") as file:
-            data = json.load(file)
+        try:
+            with open("passwords.json", "r") as file:
+                data = json.load(file)
+        except FileNotFoundError:
+            with open("passwords.json", "w") as file:
+                json.dump(new_data, file, indent=4)
+        else:
             data.update(new_data)
-
-        with open("passwords.json", "w") as file:
-            json.dump(data, file, indent=4)
-
-        website_entry.delete(0, END)
-        password_entry.delete(0, END)
+            with open("passwords.json", "w") as file:
+                json.dump(data, file, indent=4)
+        finally:
+            website_entry.delete(0, END)
+            password_entry.delete(0, END)
 
 
 def search_password():
-    pass
+    target_website = website_entry.get()
+    try:
+        with open("passwords.json", "r") as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showerror("There are no saved passwords :(")
+    else:
+        if target_website in data:
+            email = data[target_website]["email"]
+            password = data[target_website]["password"]
+            messagebox.showinfo(f"Login Info for {target_website}:\nEmail/Username: {email}\nPassword: {password}")
+        else:
+            messagebox.showerror(f"No passwords found for {target_website}")
 # ---------------------------- UI SETUP ------------------------------- #
 
 
@@ -62,21 +78,20 @@ logo_img = PhotoImage(file="logo.png")
 canvas.create_image(100, 100, image=logo_img)
 canvas.grid(column=0, row=0, columnspan=3)
 
-#Label Input pairs
 # website
 website_label = Label(text="Website")
 website_label.grid(column=0, row=1)
 
-website_entry = Entry(width=35)
-website_entry.grid(column=1, row=1, columnspan=2, sticky="ew")
+website_entry = Entry(width=21)
+website_entry.grid(column=1, row=1)
 
 # Username or email
 user_label = Label(text="Username/Email")
 user_label.grid(column=0, row=2)
 
-user_entry = Entry(width=35)
+user_entry = Entry(width=41)
 user_entry.insert(END, "filler@email.com")
-user_entry.grid(column=1, row=2, columnspan=2, sticky="ew")
+user_entry.grid(column=1, row=2, columnspan=2)
 
 # Password
 password_label = Label(text="Password")
@@ -91,6 +106,10 @@ generate_password_button.grid(column=2, row=3)
 
 add_password_button = Button(text="Add", width=36, command=save_password_to_file)
 add_password_button.grid(column=1, row=4, columnspan=2)
+
+search_button = Button(text="Search", command=search_password, width=13)
+search_button.grid(column=2, row=1)
+
 
 # Mainloop
 app.mainloop()
